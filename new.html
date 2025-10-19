@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear Time Sorts Animation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+     <h1>Linear Time Sorts Visualizer</h1>
+     <p>Explore Counting, Bucket and Radix Sort algorithm with animation</p>
+    </header>
+     <section class="input-section">
+      <label for="array-input">Input Array (comma-separated numbers)</label>
+      <input type="text" id="array-input" placeholder="e.g., 64, 34, 25, 12, 22, 11, 90">
+      
+      <div class="array-buttons">
+        <button id="small-array">Small</button>
+        <button id="large-array">Large</button>
+        <button id="random-array">Random</button>
+      </div>
+    </section>
+     <section class="algorithm-selection">
+      <label>Select Algorithm</label>
+      <div class="algo-buttons">
+        <button id="counting-btn">Counting</button>
+        <button id="bucket-btn">Bucket</button>
+        <button id="radix-btn">Radix</button>
+      </div>
+    </section>
+    <section class="start-section">
+      <button id="start-visualization">Start Visualization</button>
+    </section>
+    <section id="visualization" class="visualization-area">
+        
+
+
+        
+    </section>
+  </div>
+
+
+
+  <div id="sort-container"></div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
