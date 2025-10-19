@@ -3,47 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linear Time Sorts Animation</title>
+  <title>Linear Time Sorting Visualizer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-     <h1>Linear Time Sorts Visualizer</h1>
-     <p>Explore Counting, Bucket and Radix Sort algorithm with animation</p>
-    </header>
-     <section class="input-section">
-      <label for="array-input">Input Array (comma-separated numbers)</label>
-      <input type="text" id="array-input" placeholder="e.g., 64, 34, 25, 12, 22, 11, 90">
-      
-      <div class="array-buttons">
-        <button id="small-array">Small</button>
-        <button id="large-array">Large</button>
-        <button id="random-array">Random</button>
+  <header>
+    <h1>Linear Time Sorting Visualizer</h1>
+  </header>
+
+ <!-- Controls section -->
+<section class="controls-section">
+  <div class="input-array">
+    <h2>Enter Array</h2>
+    <input type="text" id="arrayInput" placeholder="e.g. 34,12,9,5,78,23" />
+
+    <div class="array-actions">
+      <button id="randomArrayBtn" class="action-btn">Generate Random Array</button>
+
+      <div class="speed-control">
+        <label for="speedRange">Speed:</label>
+        <span class="speed-label">Slow</span>
+        <input type="range" id="speedRange" min="100" max="1000" value="400">
+        <span class="speed-label">Fast</span>
       </div>
-    </section>
-     <section class="algorithm-selection">
-      <label>Select Algorithm</label>
-      <div class="algo-buttons">
-        <button id="counting-btn">Counting</button>
-        <button id="bucket-btn">Bucket</button>
-        <button id="radix-btn">Radix</button>
+    </div> <!-- .array-actions -->
+  </div> <!-- .input-array -->
+
+  <div class="algorithm-select">
+    <h2>Select Algorithm</h2>
+    <div class="algo-buttons">
+      <button class="algo-btn" data-algo="counting">Counting Sort</button>
+      <button class="algo-btn" data-algo="radix">Radix Sort</button>
+      <button class="algo-btn" data-algo="bucket">Bucket Sort</button>
+    </div>
+
+    <button id="startBtn">Start Visualization</button>
+  </div> <!-- .algorithm-select -->
+</section>
+
+
+  <!-- Visualization + Complexity Section -->
+  <section class="visualization-container">
+    <div class="animation-area">
+      <div id="animationCanvas"></div>
+    </div>
+
+    <div class="complexity-section">
+      <h2>Complexity Analysis</h2>
+      <div class="complexity-box">
+        <p><strong>Time Complexity:</strong> <span id="timeComplexity">-</span></p>
+        <p><strong>Space Complexity:</strong> <span id="spaceComplexity">-</span></p>
       </div>
-    </section>
-    <section class="start-section">
-      <button id="start-visualization">Start Visualization</button>
-    </section>
-    <section id="visualization" class="visualization-area">
-        
+    </div>
+  </section>
 
+  <footer>
+    <p>Created by Aayushi Sharma </p>
+  </footer>
 
-        
-    </section>
-  </div>
-
-
-
-  <div id="sort-container"></div>
-  
   <script src="script.js"></script>
 </body>
 </html>
