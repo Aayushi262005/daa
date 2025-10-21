@@ -109,6 +109,15 @@ header {
   font-size: 1rem;
   transition: 0.3s;
 }
+.btn { 
+  flex: 1; 
+  padding: 0.6rem 0.8rem; 
+  border: 1px solid #aaa;
+  border-radius: 8px; 
+  background-color: #fff; 
+  cursor: pointer; 
+  font-size: 1rem; 
+  transition: 0.3s; }
 
 .algo-btn:hover {
   background-color: #02948f;
@@ -154,15 +163,19 @@ header {
   height: 300px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  overflow-y:visible;
+  transition: height 0.3s ease;
 }
 
 #animationCanvas {
   width: 100%;
-  height: 100%;
+  padding: 10px;
+  height: auto;
   border: 2px solid #444 ;
   border-radius: 8px;
   background-color: #ffffff;
+  transition: height 0.3s ease;
 }
 
 .complexity-section {
@@ -235,5 +248,41 @@ footer {
   }
 }
 
+#animationControls { 
+  display: flex; 
+  justify-content: center; 
+  gap: 1rem; margin-top: 1rem; 
+} 
+  
+#animationControls button { 
+  background-color: #02948f; 
+  color: white; border: none; 
+  border-radius: 8px; 
+  padding: 0.6rem 1.2rem; 
+  font-size: 1rem; 
+  font-weight: 500; 
+  cursor: pointer; 
+  transition: 0.25s ease; 
+  min-width: 100px; 
+}
 
+#animationControls button:hover { 
+  background-color: #005451; 
+  transform: translateY(-2px); 
+} 
+  
+#animationControls button:active { 
+  transform: scale(0.97); 
+  background-color: #007e7a; 
+}  
+  
+@media (max-width: 768px) { 
+#animationControls { 
+  flex-direction: column; 
+  gap: 0.6rem; align-items: center; 
+} 
+  
+#animationControls button { 
+  width: 80%; } 
+}
 
