@@ -11,6 +11,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Header */
@@ -160,7 +162,8 @@ header {
   background-color: #eaf0f8;
   border-radius: 12px;
   padding:0.2rem;
-  height: 300px;
+  height: 400px;
+  min-height: 400px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -170,6 +173,7 @@ header {
 
 #animationCanvas {
   width: 100%;
+  min-height: 400px;
   padding: 10px;
   height: auto;
   border: 2px solid #444 ;
@@ -190,17 +194,6 @@ header {
   font-size: 1rem;
 }
 
-/* Footer */
-footer {
-  margin-top: auto;
-  text-align: center;
-  background-color: #222;
-  color: white;
-  padding: 0.8rem;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-  border-top: 3px solid #111;
-}
 
 /* Desktop layout */
 @media (min-width: 992px) {
@@ -222,6 +215,9 @@ footer {
     align-self: flex-start;
     width: 100%;
   }
+  #animationCanvas {
+    min-height: 280px;
+  }
 
   .visualization-container {
     flex-direction: row;
@@ -230,7 +226,8 @@ footer {
 
   .animation-area {
     flex: 7;
-    height: 400px;
+    min-height: 280px;
+    height: 350px;
   }
 
   .complexity-section {
@@ -245,6 +242,14 @@ footer {
 
   .algo-btn {
     flex: 1 1 100%;
+  }
+  .animation-area {
+    height: 300px;      
+    min-height: 250px;
+  }
+
+  #animationCanvas {
+    min-height: 250px;
   }
 }
 

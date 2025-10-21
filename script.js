@@ -23,7 +23,13 @@ let autoplayInterval = null;
 
 // --- Event Listeners ---
 SPEED_RANGE.addEventListener('input', () => {
-    animationSpeed = parseInt(SPEED_RANGE.value);
+
+   const minSpeed = 50; 
+   const maxSpeed = 1000; 
+   const sliderVal = parseInt(SPEED_RANGE.value); 
+   const maxVal = parseInt(SPEED_RANGE.max); 
+   const minVal = parseInt(SPEED_RANGE.min);  
+   animationSpeed = maxSpeed - ((sliderVal - minVal) / (maxVal - minVal)) * (maxSpeed - minSpeed);
     if (autoplayInterval) {
         clearInterval(autoplayInterval);
         startAutoplay();
@@ -41,6 +47,23 @@ ALGO_BUTTONS.forEach(btn => {
         ALGO_BUTTONS.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         selectedAlgorithm = btn.dataset.algo;
+
+        if (selectedAlgorithm === 'counting') {
+            TIME_COMPLEXITY_SPAN.textContent = 'O(n + k)';
+            SPACE_COMPLEXITY_SPAN.textContent = 'O(k)';
+
+            const explanationDiv = document.getElementById('algoExplanation');
+            explanationDiv.innerHTML = `
+                <strong>Counting Sort:</strong>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+                    <li>Sorts integers by counting the frequency of each value.</li>
+                    <li>Uses a cumulative count array to determine positions.</li>
+                    <li>Places each element in the output array (stable sort).</li>
+                    <li>Best for numbers in a small range.</li>
+                    <li><strong>Steps:</strong> Count → Cumulative Count → Build Output.</li>
+                    <li><strong>Time:</strong> O(n + k), <strong>Space:</strong> O(k)</li>
+                </ul>
+            `;}
     });
 });
 
