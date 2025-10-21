@@ -153,9 +153,10 @@ header {
 /* Visualization + Complexity */
 .visualization-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1.5rem;
   padding: 1.5rem;
+  align-items: flex-start;
 }
 
 .animation-area {
@@ -167,7 +168,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  overflow-y:visible;
+  overflow:visible;
   transition: height 0.3s ease;
 }
 
@@ -175,18 +176,20 @@ header {
   width: 100%;
   min-height: 400px;
   padding: 10px;
-  height: auto;
+  height:auto;
   border: 2px solid #444 ;
   border-radius: 8px;
   background-color: #ffffff;
-  transition: height 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .complexity-section {
+  flex: 3;
   background-color: white;
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  height: auto;
 }
 
 .complexity-box p {
@@ -220,8 +223,11 @@ header {
   }
 
   .visualization-container {
-    flex-direction: row;
-    gap: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: glex-start;
+}
   }
 
   .animation-area {
@@ -233,7 +239,7 @@ header {
   .complexity-section {
     flex: 3;
   }
-}
+
 
 @media (max-width: 600px) {
   .algo-buttons {
