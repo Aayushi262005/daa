@@ -1,4 +1,4 @@
-//// script.js
+// script.js
 
 const ANIMATION_CANVAS = document.getElementById('animationCanvas');
 const TIME_COMPLEXITY_SPAN = document.getElementById('timeComplexity');
@@ -64,7 +64,6 @@ ALGO_BUTTONS.forEach(btn => {
                     <li>Places each element in the output array (stable sort).</li>
                     <li>Best for numbers in a small range.</li>
                     <li><strong>Steps:</strong> Count → Cumulative Count → Build Output.</li>
-                    <li><strong>Time:</strong> O(n + k), <strong>Space:</strong> O(k)</li>
                 </ul>
             `;
         } else if (selectedAlgorithm === 'radix') {
@@ -77,7 +76,6 @@ ALGO_BUTTONS.forEach(btn => {
                     <li>Starts from least significant digit (LSD) to most significant (MSD).</li>
                     <li>Each pass sorts based on one digit place.</li>
                     <li>Stable and efficient for fixed-length integers.</li>
-                    <li><strong>Time:</strong> O(d*(n+k)), <strong>Space:</strong> O(n+k)</li>
                 </ul>
             `;
         } else if (selectedAlgorithm === 'bucket') {
@@ -90,7 +88,6 @@ ALGO_BUTTONS.forEach(btn => {
                     <li>Each bucket is sorted individually (we use Insertion Sort here).</li>
                     <li>Finally, all buckets are concatenated into a sorted array.</li>
                     <li>Visualization shows three phases: distribution → sorting inside each bucket → merging.</li>
-                    <li><strong>Time:</strong> O(n + k) (average), <strong>Space:</strong> O(n + k)</li>
                 </ul>
             `;
         }
