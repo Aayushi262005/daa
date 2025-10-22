@@ -1,3 +1,5 @@
+//// script.js
+
 const ANIMATION_CANVAS = document.getElementById('animationCanvas');
 const TIME_COMPLEXITY_SPAN = document.getElementById('timeComplexity');
 const SPACE_COMPLEXITY_SPAN = document.getElementById('spaceComplexity');
@@ -6,7 +8,6 @@ const ARRAY_INPUT = document.getElementById('arrayInput');
 const START_BTN = document.getElementById('startBtn');
 const RANDOM_BTN = document.getElementById('randomArrayBtn');
 const ALGO_BUTTONS = document.querySelectorAll('.algo-btn');
-
 const PREV_BTN = document.querySelectorAll('#animationControls button')[0];
 const PAUSE_BTN = document.querySelectorAll('#animationControls button')[1];
 const NEXT_BTN = document.querySelectorAll('#animationControls button')[2];
@@ -35,7 +36,8 @@ SPEED_RANGE.addEventListener('input', () => {
 });
 
 RANDOM_BTN.addEventListener('click', () => {
-    arrayData = generateRandomArray(8, 20);
+    const mode = (selectedAlgorithm === 'bucket') ? 'float' : 'int';
+    arrayData = generateRandomArray(8, 20, mode); // Uses 20 as maxVal, and correct mode
     ARRAY_INPUT.value = arrayData.join(', ');
     resetVisualization();
 });
@@ -78,12 +80,26 @@ ALGO_BUTTONS.forEach(btn => {
                     <li><strong>Time:</strong> O(d*(n+k)), <strong>Space:</strong> O(n+k)</li>
                 </ul>
             `;
+        } else if (selectedAlgorithm === 'bucket') {
+            TIME_COMPLEXITY_SPAN.textContent = 'O(n + k)';
+            SPACE_COMPLEXITY_SPAN.textContent = 'O(n + k)';
+            explanationDiv.innerHTML = `
+                <strong>Bucket Sort:</strong>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+                    <li>Distributes elements into several buckets based on range.</li>
+                    <li>Each bucket is sorted individually (we use Insertion Sort here).</li>
+                    <li>Finally, all buckets are concatenated into a sorted array.</li>
+                    <li>Visualization shows three phases: distribution → sorting inside each bucket → merging.</li>
+                    <li><strong>Time:</strong> O(n + k) (average), <strong>Space:</strong> O(n + k)</li>
+                </ul>
+            `;
         }
     });
 });
 
 START_BTN.addEventListener('click', async () => {
-    arrayData = parseArray(ARRAY_INPUT.value);
+    const mode = (selectedAlgorithm === 'bucket') ? 'float' : 'int';
+    arrayData = parseArray(ARRAY_INPUT.value, mode); // Pass the correct mode
     if (!arrayData.length) return alert("Enter valid numbers!");
 
     animationSteps = [];
@@ -102,9 +118,12 @@ START_BTN.addEventListener('click', async () => {
         await radixSort(arrayData, true);
         renderStep(animationSteps[currentStep]);
         startAutoplay();
+    } else if (selectedAlgorithm === 'bucket') {
+        await bucketSort(arrayData, true);
+        renderStep(animationSteps[currentStep]);
+        startAutoplay();
     }
 });
-
 // --- Step Control Buttons ---
 PREV_BTN.addEventListener('click', () => {
     if (currentStep > 0) {
@@ -142,16 +161,20 @@ function startAutoplay() {
 
 // --- Utilities ---
 function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function parseArray(input) {
-    return input.split(',')
-        .map(s => parseInt(s.trim()))
-        .filter(n => !isNaN(n) && n >= 0);
+function parseArray(input, mode = 'int') {
+    const parser = (mode === 'float') ? parseFloat : parseInt;
+     return input.split(',')
+    .map(s => parser(s.trim()))
+    .filter(n => !isNaN(n) && n >= 0);
 }
 
-function generateRandomArray(size, maxVal = 40) {
+function generateRandomArray(size, maxVal = 40, mode = 'int') {
+    if (mode === 'float') {
+        return Array.from({ length: size }, () => parseFloat((Math.random() * maxVal).toFixed(2)));
+    }
     return Array.from({ length: size }, () => Math.floor(Math.random() * maxVal));
 }
 
@@ -202,7 +225,6 @@ async function countingSort(arr, storeSteps = false) {
     }
 }
 
-// --- Radix Sort ---
 //--- Radix Sort Implementation ---
 async function radixSort(arr) {
     const maxNum = Math.max(...arr, 0);
@@ -264,14 +286,91 @@ async function radixSort(arr) {
     }
 }
 
-// --- Updated renderStep (Radix digit-level underline with dynamic padding) ---
+// --- Enhanced Bucket Sort (Step-by-Step Visualization) ---
+async function bucketSort(arr, storeSteps = false) {
+    const n = arr.length;
+    if (n <= 0) return;
+
+    const maxVal = Math.max(...arr);
+    const minVal = Math.min(...arr);
+    const bucketCount = Math.floor(Math.sqrt(n)) || 1;
+    const buckets = Array.from({ length: bucketCount }, () => []);
+    const outputArr = new Array(n).fill(null);
+
+    const range = maxVal - minVal || 1;
+
+    // Initial setup
+    storeStep(arr, buckets, outputArr, { phase: 'init' });
+
+    // --- Phase 1: Distribute elements into buckets ---
+    for (let i = 0; i < n; i++) {
+        const index = Math.floor(((arr[i] - minVal) / range) * (bucketCount - 1));
+        buckets[index].push(arr[i]);
+        storeStep(arr, buckets, outputArr, { phase: 'distribution', input: i, bucket: index });
+    }
+
+    // --- Phase 2: Sort each bucket (Insertion Sort) ---
+    for (let b = 0; b < bucketCount; b++) {
+        if (buckets[b].length === 0) continue;
+        for (let i = 1; i < buckets[b].length; i++) {
+            let key = buckets[b][i];
+            let j = i - 1;
+            while (j >= 0 && buckets[b][j] > key) {
+                buckets[b][j + 1] = buckets[b][j];
+                j--;
+                storeStep(arr, buckets, outputArr, { phase: 'sorting', bucket: b, sortIdx: i, innerIdx: j + 1 });
+            }
+            buckets[b][j + 1] = key;
+            storeStep(arr, buckets, outputArr, { phase: 'sorting', bucket: b, sortIdx: i, innerIdx: j + 1 });
+        }
+    }
+
+    // --- Phase 3: Concatenate all buckets into output array ---
+    let idx = 0;
+    for (let b = 0; b < bucketCount; b++) {
+        for (let val of buckets[b]) {
+            outputArr[idx++] = val;
+            storeStep(arr, buckets, outputArr, { phase: 'merging', bucket: b, output: idx - 1 });
+        }
+    }
+
+    // Final snapshot
+    storeStep(arr, buckets, outputArr, { phase: 'complete' }, true);
+
+    function storeStep(inputArr, buckets, outputArr, highlight = {}, final = false) {
+        animationSteps.push({
+            inputArr: [...inputArr],
+            buckets: buckets.map(bucket => [...bucket]),
+            outputArr: [...outputArr],
+            highlight: { ...highlight },
+            final
+        });
+    }
+}
+
+// --- Unified renderStep (handles Counting, Radix, Bucket visualizations) ---
 function renderStep(step) {
-    const { inputArr, countArr, outputArr, highlight, final } = step;
+    const { inputArr, countArr, buckets, outputArr, highlight = {}, final } = step || {};
     ANIMATION_CANVAS.innerHTML = '';
 
-    function createArraySection(title, arr, highlightIdx, bigger = false, countBucket = false) {
+    // --- Phase title ---
+    const phaseTitle = document.createElement('h3');
+    phaseTitle.style.textAlign = 'center';
+    phaseTitle.style.color = '#004745';
+    phaseTitle.style.marginBottom = '12px';
+    phaseTitle.style.fontWeight = '700';
+    phaseTitle.textContent =
+        highlight.phase === 'distribution' ? 'Phase 1: Distributing Elements into Buckets'
+        : highlight.phase === 'sorting' ? 'Phase 2: Sorting Inside Bucket'
+        : highlight.phase === 'merging' ? 'Phase 3: Merging Buckets into Final Output'
+        : highlight.phase === 'complete' ? 'Sorting Complete!'
+        : 'Initialization';
+    ANIMATION_CANVAS.appendChild(phaseTitle);
+
+    // --- Helper to create array displays ---
+    function createArraySection(title, arr, hlight, bigger = false, countBucket = false) {
         const wrapper = document.createElement('div');
-        wrapper.style.marginBottom = '24px';
+        wrapper.style.marginBottom = '18px';
         wrapper.style.textAlign = 'center';
 
         const heading = document.createElement('div');
@@ -287,9 +386,11 @@ function renderStep(step) {
         container.style.gap = '6px';
         container.style.justifyContent = 'center';
 
-        const maxDigits = Math.max(...arr).toString().length;
+        // safely compute maxDigits for radix rendering
+        const maxVal = arr && arr.length ? Math.max(...arr.map(v => v ?? 0)) : 0;
+        const maxDigits = Math.max(1, maxVal).toString().length;
 
-        arr.forEach((val, idx) => {
+        (arr || []).forEach((val, idx) => {
             const boxWrapper = document.createElement('div');
             boxWrapper.style.display = 'flex';
             boxWrapper.style.flexDirection = 'column';
@@ -311,25 +412,36 @@ function renderStep(step) {
             box.style.borderRadius = '6px';
             box.style.fontWeight = '600';
             box.style.fontSize = bigger ? '0.95rem' : '0.9rem';
-            box.style.backgroundColor = countBucket
-                ? highlight.count === idx ? '#00cec8' : '#a0f0f0'
-                : highlight.input === idx || highlight.output === idx ? '#00cec8' : '#00faf3';
 
-            // Radix Sort digit-level underline (LSB → MSB)
+            // background logic
+            if (countBucket) {
+                box.style.backgroundColor = highlight.count === idx ? '#00cec8' : '#a0f0f0';
+            } else if (highlight.input === idx) {
+                box.style.backgroundColor = '#ffd966'; // active input highlight (yellow-ish)
+            } else if (highlight.output === idx) {
+                box.style.backgroundColor = '#b6f0d5'; // active output highlight (green-ish)
+            } else {
+                box.style.backgroundColor = '#ffffff';
+            }
+
+            // Radix digit-level underline if applicable
             if (selectedAlgorithm === 'radix' && highlight.digitIdx !== undefined && highlight.input === idx && !countBucket) {
-                const digits = val.toString().padStart(maxDigits, '0').split('');
+                const digits = (val !== undefined && val !== null ? String(val) : '').padStart(maxDigits, '0').split('');
                 digits.forEach((digit, dIdx) => {
                     const digitSpan = document.createElement('span');
                     digitSpan.textContent = digit;
                     if (dIdx === digits.length - 1 - highlight.digitIdx) {
                         digitSpan.style.textDecoration = 'underline';
                         digitSpan.style.color = '#e74c3c';
+                        digitSpan.style.margin = '0 1px';
+                    } else {
+                        digitSpan.style.margin = '0 1px';
                     }
                     box.appendChild(digitSpan);
                 });
             } else {
                 const valSpan = document.createElement('span');
-                valSpan.textContent = val !== undefined ? val : '';
+                valSpan.textContent = (val !== undefined && val !== null) ? val : '';
                 box.appendChild(valSpan);
             }
 
@@ -342,7 +454,112 @@ function renderStep(step) {
         ANIMATION_CANVAS.appendChild(wrapper);
     }
 
-    createArraySection('Input Array', inputArr, highlight.input, true);
-    createArraySection('Count Array', countArr, highlight.count, true, true);
-    createArraySection('Output Array', outputArr, highlight.output, true);
+    // --- Input Array ---
+    if (inputArr) createArraySection('Input Array', inputArr, highlight.input, true);
+
+    // --- Count Array (Counting/Radix only) ---
+    if (countArr && !buckets) createArraySection('Count Array', countArr, highlight.count, true, true);
+
+// --- Buckets (Bucket Sort only) ---
+if (buckets) {
+    const wrapper = document.createElement('div');
+    wrapper.style.margin = '18px 0';
+    wrapper.style.textAlign = 'center';
+
+    const heading = document.createElement('div');
+    heading.textContent = 'Buckets';
+    heading.style.fontWeight = '700';
+    heading.style.color = '#004745';
+    heading.style.marginBottom = '8px';
+    wrapper.appendChild(heading);
+
+    // descriptive sub-label for phase
+    const phaseDesc = document.createElement('div');
+    phaseDesc.style.marginBottom = '10px';
+    phaseDesc.style.fontSize = '0.95rem';
+    phaseDesc.style.color = '#333';
+    phaseDesc.textContent =
+        highlight.phase === 'distribution' ? 'Distributing elements into buckets (each added one-by-one).'
+        : highlight.phase === 'sorting' ? `Sorting bucket ${highlight.bucket ?? ''} (insertion steps shown).`
+        : highlight.phase === 'merging' ? 'Merging buckets into the output array.'
+        : '';
+    wrapper.appendChild(phaseDesc);
+
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexWrap = 'wrap';
+    container.style.justifyContent = 'center';
+    container.style.gap = '12px';
+
+    // --- Compute bucket ranges based on input array ---
+    const minVal = Math.min(...arrayData, 0);
+    const maxVal = Math.max(...arrayData, 0);
+    const bucketCount = buckets.length;
+    const range = (maxVal - minVal) / bucketCount;
+
+    buckets.forEach((bucket, bIdx) => {
+        const bucketDiv = document.createElement('div');
+        bucketDiv.style.border = '2px solid #007b78';
+        bucketDiv.style.borderRadius = '8px';
+        bucketDiv.style.padding = '8px';
+        bucketDiv.style.minWidth = '90px';
+        bucketDiv.style.background =
+            highlight.bucket === bIdx
+                ? highlight.phase === 'distribution' ? '#fff0d9'
+                : highlight.phase === 'sorting' ? '#e6fff2'
+                : '#f2fcfb'
+                : '#f7fbfb';
+        bucketDiv.style.display = 'flex';
+        bucketDiv.style.flexDirection = 'column';
+        bucketDiv.style.alignItems = 'center';
+        bucketDiv.style.gap = '8px';
+
+        // --- Bucket label showing range ---
+        const label = document.createElement('div');
+        const bucketMin = (minVal + bIdx * range);
+        const bucketMax = (bIdx === bucketCount - 1) ? maxVal : (minVal + (bIdx + 1) * range);
+        const hasDecimals = arrayData.some(n => n % 1 !== 0);
+        const precision = hasDecimals ? 2 : 0;
+        label.textContent = `Bucket ${bIdx} (${bucketMin.toFixed(precision)}–${bucketMax.toFixed(precision)})`;
+        label.style.fontWeight = '600';
+        label.style.marginBottom = '4px';
+        bucketDiv.appendChild(label);
+
+        const elements = document.createElement('div');
+        elements.style.display = 'flex';
+        elements.style.gap = '6px';
+        elements.style.flexWrap = 'wrap';
+        elements.style.justifyContent = 'center';
+
+        bucket.forEach((val, idx) => {
+            const el = document.createElement('div');
+            el.textContent = val;
+            el.style.padding = '6px 8px';
+            el.style.borderRadius = '6px';
+            el.style.border = '1.5px solid #007b78';
+            el.style.minWidth = '28px';
+            el.style.textAlign = 'center';
+
+            if (highlight.bucket === bIdx && highlight.innerIdx === idx) {
+                el.style.background = '#00cec8';
+            } else if (highlight.bucket === bIdx && highlight.sortIdx === idx) {
+                el.style.background = '#aaf3e6';
+            } else {
+                el.style.background = '#ffffff';
+            }
+
+            elements.appendChild(el);
+        });
+
+        bucketDiv.appendChild(elements);
+        container.appendChild(bucketDiv);
+    });
+
+    wrapper.appendChild(container);
+    ANIMATION_CANVAS.appendChild(wrapper);
+}
+
+
+    // --- Output Array ---
+    if (outputArr) createArraySection('Output Array', outputArr, highlight.output, true);
 }
