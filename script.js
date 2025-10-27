@@ -138,7 +138,7 @@ ALGO_BUTTONS.forEach(btn => {
                     <li>Distributes elements into several buckets based on range.</li>
                     <li>Each bucket is sorted individually (we use Insertion Sort here).</li>
                     <li>Finally, all buckets are concatenated into a sorted array.</li>
-                    <li>Time Complexity:O(n + k) (Average/Best) when elements are uniformly distributed; O(n²) (Worst-Case) when all elements fall into one bucket.</li>
+                    <li><strong>Time Complexity </strong>:O(n + k) (Average/Best) when elements are uniformly distributed; O(n²) (Worst-Case) when all elements fall into one bucket.</li>
                     <li>Visualization shows three phases: distribution → sorting inside each bucket → merging.</li>
                 </ul>
             `;
