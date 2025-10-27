@@ -1,3 +1,4 @@
+//js
 const ANIMATION_CANVAS = document.getElementById('animationCanvas');
 const TIME_COMPLEXITY_SPAN = document.getElementById('timeComplexity');
 const SPACE_COMPLEXITY_SPAN = document.getElementById('spaceComplexity');
@@ -737,4 +738,4 @@ if (buckets) {
 
 document.addEventListener('DOMContentLoaded', () => {
     toggleControls(); 
-});
+});     
