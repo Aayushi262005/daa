@@ -111,15 +111,6 @@ header {
   font-size: 1rem;
   transition: 0.3s;
 }
-.btn { 
-  flex: 1; 
-  padding: 0.6rem 0.8rem; 
-  border: 1px solid #aaa;
-  border-radius: 8px; 
-  background-color: #fff; 
-  cursor: pointer; 
-  font-size: 1rem; 
-  transition: 0.3s; }
 
 .algo-btn:hover {
   background-color: #02948f;
@@ -134,7 +125,7 @@ header {
 }
 
 #startBtn {
-  background-color:#02948f;;;
+  background-color:#02948f;
   color: white;
   padding: 0.8rem;
   border: none;
@@ -174,7 +165,7 @@ header {
 
 #animationCanvas {
   width: 100%;
-  min-height: 400px;
+  min-height: 396px;
   padding: 10px;
   height:auto;
   border: 2px solid #444 ;
@@ -219,7 +210,7 @@ header {
     width: 100%;
   }
   #animationCanvas {
-    min-height: 280px;
+    min-height: 346px;
   }
 
   .visualization-container {
@@ -232,7 +223,7 @@ header {
 
   .animation-area {
     flex: 7;
-    min-height: 280px;
+    min-height: 350px;
     height: 350px;
   }
 

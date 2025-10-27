@@ -11,7 +11,6 @@
     <h1>Linear Time Sorting Visualizer</h1>
   </header>
 
- <!-- Controls section -->
 <section class="controls-section">
   <div class="input-array">
     <h2>Enter Array</h2>
@@ -19,15 +18,14 @@
 
     <div class="array-actions">
       <button id="randomArrayBtn" class="action-btn">Generate Random Array</button>
-
       <div class="speed-control">
         <label for="speedRange">Speed:</label>
         <span class="speed-label">Slow</span>
         <input type="range" id="speedRange" min="100" max="1000" value="400">
         <span class="speed-label">Fast</span>
       </div>
-    </div> <!-- .array-actions -->
-  </div> <!-- .input-array -->
+    </div> 
+  </div> 
 
   <div class="algorithm-select">
     <h2>Select Algorithm</h2>
@@ -37,17 +35,14 @@
       <button class="algo-btn" data-algo="bucket">Bucket Sort</button>
     </div>
     <div class="control-buttons" id="animationControls"> 
-      <button id="btn">Previous</button> 
-      <button id="btn">Pause</button> 
-      <button id="">Next</button> 
+      <button id="prevBtn">Previous</button> 
+      <button id="pauseBtn">Pause</button> 
+      <button id="nextBtn">Next</button> 
     </div>
     <button id="startBtn">Start Visualization</button>
-
-  </div> <!-- .algorithm-select -->
+  </div> 
 </section>
 
-
-  <!-- Visualization + Complexity Section -->
   <section class="visualization-container">
     <div class="animation-area">
       <div id="animationCanvas"></div>
