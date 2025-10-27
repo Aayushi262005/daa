@@ -13,7 +13,7 @@ const RADIX_DIGIT_NAMES = ['LSD (Units)', 'Tens', 'Hundreds', 'Thousands', 'Ten 
 
 let arrayData = [];
 let animationSpeed = 400; 
-let selectedAlgorithm = 'counting';
+let selectedAlgorithm = null; // Initialized to null to enforce selection
 
 let animationSteps = [];
 let currentStep = 0;
@@ -40,8 +40,9 @@ function toggleControls() {
         ALGO_BUTTONS.forEach(btn => btn.disabled = false);
     }
     
-    START_BTN.disabled = false;
-
+    // Disable START_BTN if visualization is not active AND no algorithm is selected
+    START_BTN.disabled = !isVisualizationActive && selectedAlgorithm === null;
+    
     const stepsExist = animationSteps.length > 0;
     const isAnimationRunning = autoplayInterval !== null && !isPaused;
     
@@ -64,7 +65,6 @@ function resetVisualization(time = '-', space = '-') {
     if (time !== '-') TIME_COMPLEXITY_SPAN.textContent = time; 
     if (space !== '-') SPACE_COMPLEXITY_SPAN.textContent = space;
     
-    ARRAY_INPUT.value = arrayData.join(', ');
     toggleControls();
 }
 
@@ -96,11 +96,13 @@ RANDOM_BTN.addEventListener('click', () => {
 
 ALGO_BUTTONS.forEach(btn => {
     btn.addEventListener('click', () => {
+        const mode = (selectedAlgorithm === 'bucket') ? 'float' : 'int';
+        arrayData = parseArray(ARRAY_INPUT.value, mode);
         resetVisualization('-', '-');
         
         ALGO_BUTTONS.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        selectedAlgorithm = btn.dataset.algo;
+        selectedAlgorithm = btn.dataset.algo; 
 
         const explanationDiv = document.getElementById('algoExplanation');
 
@@ -143,6 +145,12 @@ ALGO_BUTTONS.forEach(btn => {
                 </ul>
             `;
         }
+        
+        const newMode = (selectedAlgorithm === 'bucket') ? 'float' : 'int';
+        const newArrayData = parseArray(ARRAY_INPUT.value, newMode);
+        ARRAY_INPUT.value = newArrayData.join(', ');
+        
+        toggleControls();
     });
 });
 
@@ -152,10 +160,15 @@ START_BTN.addEventListener('click', async () => {
         return resetVisualization();
     }
     
+    if (selectedAlgorithm === null) return; 
+
     const mode = (selectedAlgorithm === 'bucket') ? 'float' : 'int';
     arrayData = parseArray(ARRAY_INPUT.value, mode); 
+    
     if (!arrayData.length) return alert("Enter valid numbers!");
 
+    ARRAY_INPUT.value = arrayData.join(', '); 
+    
     animationSteps = [];
     currentStep = 0;
     isPaused = false;
@@ -264,7 +277,11 @@ function delay(ms) {
 function parseArray(input, mode = 'int') {
     const parser = (mode === 'float') ? parseFloat : parseInt;
     return input.split(',')
-    .map(s => parser(s.trim()))
+    .map(s => {
+        const trimmedS = s.trim();
+        if (trimmedS === '') return NaN; 
+        return parser(trimmedS);
+    })
     .filter(n => !isNaN(n) && n >= 0);
 }
 
@@ -432,9 +449,9 @@ async function bucketSort(arr, storeSteps = false) {
         for (let val of buckets[b]) {
              storeStep(arr, buckets, outputArr, { phase: 'merging', bucket: b, elementVal: val });
              
-            outputArr[idx++] = val;
-            
-            storeStep(arr, buckets, outputArr, { phase: 'merging', output: idx - 1 });
+             outputArr[idx++] = val;
+             
+             storeStep(arr, buckets, outputArr, { phase: 'merging', output: idx - 1 });
         }
     }
 
@@ -550,7 +567,7 @@ function renderStep(step) {
                 box.style.backgroundColor = hlight.count === idx ? '#00cec8' : '#a0f0f0';
                 isHighlighted = hlight.count === idx;
             } else if (title.includes('Output Array') && val !== undefined && val !== null) {
-                 if (hlight.output === idx) {
+                if (hlight.output === idx) {
                     box.style.backgroundColor = '#b6f0d5'; 
                     isHighlighted = true;
                 }
@@ -717,3 +734,7 @@ if (buckets) {
 
     if (outputArr) createArraySection('Output Array', outputArr, highlight, true);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    toggleControls(); 
+});
