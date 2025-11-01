@@ -655,7 +655,7 @@ if (buckets) {
     const minVal = Math.min(...arrayData.filter(n => n !== null), 0);
     const maxVal = Math.max(...arrayData.filter(n => n !== null), 0);
     const bucketCount = buckets.length;
-    const range = (maxVal - minVal) / bucketCount;
+    const range = (maxVal - minVal) / bucketCount||1;
 
     buckets.forEach((bucket, bIdx) => {
         const bucketDiv = document.createElement('div');
@@ -676,15 +676,21 @@ if (buckets) {
         bucketDiv.style.alignItems = 'center';
         bucketDiv.style.gap = '8px';
 
-        const label = document.createElement('div');
+        
         const bucketMin = (minVal + bIdx * range);
         const bucketMax = (bIdx === bucketCount - 1) ? maxVal : (minVal + (bIdx + 1) * range);
-        const hasDecimals = arrayData.some(n => n % 1 !== 0);
-        const precision = hasDecimals ? 2 : 0;
+        const needsDecimalPrecision = (range% 1 !== 0) || arrayData.some(n => n % 1 !== 0);
+        const precision = needsDecimalPrecision ? 1 : 0;
+        const minStr = bucketMin.toFixed(precision);
+        const maxStr = bucketMax.toFixed(precision);
+        const endOperator = (bIdx === bucketCount - 1) ? ' ≤ ' : ' < ';
+         let rangeLabel = `${minStr}${endOperator}${maxStr}`;
+        if (!needsDecimalPrecision) {
+            rangeLabel = `${Math.floor(bucketMin)} - ${Math.floor(bucketMax)}`;
+        }
+        const label = document.createElement('div');
         
-        const endLabel = (bIdx === bucketCount - 1) ? ` ≤ ${bucketMax.toFixed(precision)}` : ` < ${bucketMax.toFixed(precision)}`;
-        
-        label.textContent = `Bucket ${bIdx}: ${bucketMin.toFixed(precision)}${endLabel}`;
+        label.textContent = `Bucket ${bIdx}: ${rangeLabel}`;
         
         label.style.fontWeight = '600';
         label.style.marginBottom = '4px';
