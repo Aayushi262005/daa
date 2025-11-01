@@ -14,7 +14,7 @@ const RADIX_DIGIT_NAMES = ['LSD (Units)', 'Tens', 'Hundreds', 'Thousands', 'Ten 
 
 let arrayData = [];
 let animationSpeed = 400; 
-let selectedAlgorithm = null; // Initialized to null to enforce selection
+let selectedAlgorithm = null; 
 
 let animationSteps = [];
 let currentStep = 0;
@@ -426,32 +426,34 @@ async function radixSort(arr) {
     }
 }
 
-// --- Enhanced Bucket Sort ---
 async function bucketSort(arr, storeSteps = false) {
     const n = arr.length;
     if (n <= 0) return;
 
     const maxVal = Math.max(...arr);
     const minVal = Math.min(...arr);
+    const totalRange = maxVal - minVal;
     const bucketCount = Math.floor(Math.sqrt(n)) || 1;
     const buckets = Array.from({ length: bucketCount }, () => []);
     const outputArr = new Array(n).fill(null);
 
-    const range = maxVal - minVal || 1;
+    const actualRange = totalRange || 1; 
+    const bucketSize = actualRange / bucketCount;
 
     storeStep(arr, buckets, outputArr, { phase: 'init' });
 
     for (let i = 0; i < n; i++) {
-        let index = Math.floor(((arr[i] - minVal) / range) * bucketCount);
-
-        if (arr[i] === maxVal && maxVal !== minVal) {
-            index = bucketCount - 1;
-        } 
-        else if (index >= bucketCount) {
-             index = bucketCount - 1;
+        const val = arr[i];
+        let index;
+        if (totalRange === 0|| val === maxVal) {
+             index = bucketCount -1 ; 
+        } else {
+             index = Math.floor(((val - minVal) / actualRange) * bucketCount);
         }
-
-        buckets[index].push(arr[i]);
+        if (index < 0) index = 0; 
+       
+        
+        buckets[index].push(val);
         storeStep(arr, buckets, outputArr, { phase: 'distribution', input: i, bucket: index });
     }
 
@@ -474,12 +476,13 @@ async function bucketSort(arr, storeSteps = false) {
 
     let idx = 0;
     for (let b = 0; b < bucketCount; b++) {
-        for (let val of buckets[b]) {
-             storeStep(arr, buckets, outputArr, { phase: 'merging', bucket: b, elementVal: val });
-             
-             outputArr[idx++] = val;
-             
-             storeStep(arr, buckets, outputArr, { phase: 'merging', output: idx - 1 });
+        for (let innerIdx = 0; innerIdx < buckets[b].length; innerIdx++) { 
+            let val = buckets[b][innerIdx]; 
+            storeStep(arr, buckets, outputArr, { phase: 'merging', bucket: b, innerIdx: innerIdx }); 
+
+            outputArr[idx++] = val;
+
+            storeStep(arr, buckets, outputArr, { phase: 'merging', output: idx - 1 });
         }
     }
 
@@ -679,7 +682,7 @@ if (buckets) {
     container.style.justifyContent = 'center';
     container.style.gap = '12px';
 
-    const minVal = Math.min(...arrayData.filter(n => n !== null), 0);
+    const minVal = Math.min(...arrayData.filter(n => n !== null));
     const maxVal = Math.max(...arrayData.filter(n => n !== null), 0);
     const bucketCount = buckets.length;
     const range = (maxVal - minVal) / bucketCount||1;
@@ -703,18 +706,18 @@ if (buckets) {
         bucketDiv.style.alignItems = 'center';
         bucketDiv.style.gap = '8px';
 
-        
         const bucketMin = (minVal + bIdx * range);
         const bucketMax = (bIdx === bucketCount - 1) ? maxVal : (minVal + (bIdx + 1) * range);
-        const needsDecimalPrecision = (range% 1 !== 0) || arrayData.some(n => n % 1 !== 0);
-        const precision = needsDecimalPrecision ? 1 : 0;
+
+        const precision = (range % 1 !== 0) || arrayData.some(n => n % 1 !== 0) ? 2 : 0;
+        
         const minStr = bucketMin.toFixed(precision);
         const maxStr = bucketMax.toFixed(precision);
-        const endOperator = (bIdx === bucketCount - 1) ? ' ≤ ' : ' < ';
-         let rangeLabel = `${minStr}${endOperator}${maxStr}`;
-        if (!needsDecimalPrecision) {
-            rangeLabel = `${Math.floor(bucketMin)} - ${Math.floor(bucketMax)}`;
-        }
+        const startBracket = '[';
+        const endBracket = (bIdx === bucketCount - 1) ? ']' : ')'; 
+
+        const rangeLabel = `${startBracket}${minStr}, ${maxStr}${endBracket}`;
+        
         const label = document.createElement('div');
         
         label.textContent = `Bucket ${bIdx}: ${rangeLabel}`;
@@ -745,7 +748,7 @@ if (buckets) {
                     el.style.background = '#00cec8'; 
                 } else if (highlight.phase === 'sorting' && highlight.sortIdx === idx) {
                     el.style.background = '#aaf3e6'; 
-                } else if (highlight.phase === 'merging' && val === highlight.elementVal && highlight.output === undefined) {
+                } else if (highlight.phase === 'merging' && highlight.innerIdx === idx && highlight.output === undefined) {
                     el.style.background = '#ffd966'; 
                 } else {
                     el.style.background = '#ffffff';
