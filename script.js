@@ -111,38 +111,65 @@ ALGO_BUTTONS.forEach(btn => {
             TIME_COMPLEXITY_SPAN.textContent = 'O(n + k)';
             SPACE_COMPLEXITY_SPAN.textContent = 'O(k)';
             explanationDiv.innerHTML = `
-                <strong>Counting Sort:</strong>
-                <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
-                    <li>Sorts integers by counting the frequency of each value.</li>
-                    <li>Uses a cumulative count array to determine positions.</li>
-                    <li>Places each element in the output array (stable sort).</li>
-                    <li>Best for numbers in a small range.</li>
-                    <li><strong>Steps:</strong> Count → Cumulative Count → Build Output.</li>
+                <strong style="font-size: 1.05em;">Counting Sort — Linear Time, Non-Comparison</strong>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; line-height: 1.5;">
+                    <li><strong>Count Frequencies:</strong>  
+                        Count array stores how often each value appears.
+                    </li>
+                    <li><strong>Cumulative Sum:</strong>  
+                        Convert counts to positions to keep the sort <strong>stable</strong>.
+                    </li>
+                    <li><strong>Build Output:</strong>  
+                        Place elements in the output array (backward pass) using cumulative indices.
+                    </li>
+                    <li>
+                    <strong>Constraint:</strong>  
+                        Efficient only when value range (<em>k</em>) is small compared to the number of elements (<em>n</em>).
+                    </li>
                 </ul>
-            `;
-        } else if (selectedAlgorithm === 'radix') {
+                `;
+        } 
+        else if (selectedAlgorithm === 'radix') {
             TIME_COMPLEXITY_SPAN.textContent = 'O(d * (n + k))';
             SPACE_COMPLEXITY_SPAN.textContent = 'O(n + k)';
             explanationDiv.innerHTML = `
-                <strong>Radix Sort:</strong>
-                <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
-                    <li>Sorts numbers digit by digit using Counting Sort as a subroutine.</li>
-                    <li>Starts from least significant digit (LSD) to most significant (MSD).</li>
-                    <li>Each pass sorts based on one digit place.</li>
-                    <li>Stable and efficient for fixed-length integers.</li>
+                <strong style="font-size: 1.05em;">Radix Sort — Digit-by-Digit Stable Sorting</strong>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; line-height: 1.5;">
+                    <li><strong>Process:</strong>  
+                        Sorts numbers digit by digit, starting from the <strong>Least Significant Digit (LSD)</strong> to the <strong>Most Significant Digit (MSD)</strong>.
+                    </li>
+                    <li><strong>Inner Sort:</strong>  
+                        Uses a <strong>stable sort</strong> (like Counting Sort) on each digit to maintain relative order.
+                    </li>
+                    <li><strong>Why LSD First:</strong>  
+                        Ensures earlier digit order is preserved, resulting in a fully sorted array after the final pass.
+                    </li>
+                    <li>
+                        <strong>Complexity:</strong>  
+                        <em>O(d*(n + k))</em>, where <em>d</em> is the number of digits.
+                    </li>
                 </ul>
             `;
-        } else if (selectedAlgorithm === 'bucket') {
+        } 
+        else if (selectedAlgorithm === 'bucket') {
            TIME_COMPLEXITY_SPAN.textContent = 'O(n + k) / O(n²) ';
             SPACE_COMPLEXITY_SPAN.textContent = 'O(n + k)';
             explanationDiv.innerHTML = `
-                <strong>Bucket Sort:</strong>
-                <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
-                    <li>Distributes elements into several buckets based on range.</li>
-                    <li>Each bucket is sorted individually (we use Insertion Sort here).</li>
-                    <li>Finally, all buckets are concatenated into a sorted array.</li>
-                    <li><strong>Time Complexity </strong>:O(n + k) (Average/Best) when elements are uniformly distributed; O(n²) (Worst-Case) when all elements fall into one bucket.</li>
-                    <li>Visualization shows three phases: distribution → sorting inside each bucket → merging.</li>
+                <strong style="font-size: 1.05em;">Bucket Sort — Partitioning for Parallel Speed</strong>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; line-height: 1.5;">
+                    <li><strong>Phase 1: Distribution:</strong>  
+                        Elements are distributed into smaller <strong>buckets</strong> based on their value range using a mapping function.
+                    </li>
+                    <li><strong>Phase 2: Sub-Sorting:</strong>  
+                        Each bucket is sorted individually (commonly with <strong>Insertion Sort</strong>) — fast because buckets are small.
+                    </li>
+                    <li><strong>Phase 3: Merging:</strong>  
+                        Sorted buckets are concatenated to produce the final sorted array.
+                    </li>
+                    <li>
+                        <strong>Performance Note:</strong>  
+                        Average time <em>O(n + k)</em> (when input is uniformly distributed); worst case <em>O(n²)</em>.
+                    </li>
                 </ul>
             `;
         }
