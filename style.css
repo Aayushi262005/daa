@@ -155,7 +155,7 @@ header {
   border-radius: 12px;
   padding:0.2rem;
   height: auto;
-  min-height: 50vh;
+  min-height: 60vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -165,7 +165,7 @@ header {
 
 #animationCanvas {
   width: 100%;
-  min-height: calc(50vh - 40px);;
+  min-height: calc(70vh - 40px);;
   padding: 10px;
   height:auto;
   border: 2px solid #444 ;
@@ -210,21 +210,21 @@ header {
     width: 100%;
   }
   #animationCanvas {
-    min-height: calc(55vh - 40px);;
+    min-height: calc(70vh - 40px);;
   }
 
   .visualization-container {
   display: flex;
   flex-direction: row;
   gap: 2rem;
-  align-items: glex-start;
+  align-items: flex-start;
 }
   }
 
   .animation-area {
     flex: 7;
-    min-height: 55vh;
-    height: 55vh;
+    min-height: 60vh;
+    height: 60vh;
   }
 
   .complexity-section {
