@@ -1,65 +1,90 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linear Time Sorting Visualizer</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linear Time Sorting Visualizer</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Linear Time Sorting Visualizer</h1>
-  </header>
+    
+    <header class="top-header">
+        <div class="header-logo">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93h2c0 2.48 2.02 4.5 4.5 4.5s4.5-2.02 4.5-4.5h2c0 4.08-3.05 7.44-7 7.93zM12 4.07c3.95.49 7 3.85 7 7.93h-2c0-2.48-2.02-4.5-4.5-4.5S7.5 9.52 7.5 12H5c0-4.08 3.05-7.44 7-7.93z"></path></svg>
+            <span class="logo-text">Sorting Visualizer</span>
+        </div>
+        <div class="header-controls">
+            
+            <div class="algo-select-compact">
+                <label for="algoSelect" class="control-label">Algorithm:</label>
+                <div class="algo-buttons">
+                    <button class="algo-btn" data-algo="counting">Counting Sort</button>
+                    <button class="algo-btn" data-algo="radix">Radix Sort</button>
+                    <button class="algo-btn" data-algo="bucket">Bucket Sort</button>
+                </div>
+            </div>
 
-<section class="controls-section">
-  <div class="input-array">
-    <h2>Enter Array</h2>
-    <input type="text" id="arrayInput" placeholder="e.g. 34,12,9,5,78,23" />
+            <div class="speed-control-compact">
+                <label for="speedRange" class="control-label">Speed:</label>
+                <input type="range" id="speedRange" min="100" max="1000" value="400">
+            </div>
 
-    <div class="array-actions">
-      <button id="randomArrayBtn" class="action-btn">Generate Random Array</button>
-      <div class="speed-control">
-        <label for="speedRange">Speed:</label>
-        <span class="speed-label">Slow</span>
-        <input type="range" id="speedRange" min="100" max="1000" value="400">
-        <span class="speed-label">Fast</span>
-      </div>
-    </div> 
-  </div> 
+            </div>
+    </header>
 
-  <div class="algorithm-select">
-    <h2>Select Algorithm</h2>
-    <div class="algo-buttons">
-      <button class="algo-btn" data-algo="counting">Counting Sort</button>
-      <button class="algo-btn" data-algo="radix">Radix Sort</button>
-      <button class="algo-btn" data-algo="bucket">Bucket Sort</button>
+    <div class="app-container">
+        
+        <aside class="left-sidebar">
+            <h2 class="sidebar-heading">Complexity Analysis</h2>
+            <div class="complexity-box" id="complexitySection">
+                <div id="algoExplanation" class="explanation-text">
+                    <p>Select an algorithm to see its details and complexity.</p>
+                </div>
+                <div class="complexity-stats">
+                    <p><strong>Time Complexity:</strong> <span id="timeComplexity">-</span></p>
+                    <p><strong>Space Complexity:</strong> <span id="spaceComplexity">-</span></p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" role="main"> 
+            <div class="visualization-wrapper">
+                
+                <div class="central-controls-area">
+                    <div class="input-array-center">
+                        <label for="arrayInput" class="array-label-compact">Enter elements:</label>
+                        <input type="text" id="arrayInput" placeholder="e.g. 34,12,9,5,..." />
+                        
+                        <button id="visualizeBtn" class="secondary-btn">Visualize Array</button> 
+                        
+                        <button id="randomArrayBtn" class="secondary-btn">Generate Random Array</button>
+                    </div>
+                    
+                    <div id="bucketInputGroup" style="display: none; margin-top: 15px; text-align: center; padding-bottom: 5px;">
+                        <label for="bucketCountInput" class="control-label">Number of Buckets (Optional Override):</label>
+                        <input type="number" id="bucketCountInput" min="1" value="0" placeholder="0 (Default: √N)">
+                    </div>
+                    
+                    <div class="control-buttons-center" id="animationControls"> 
+                        <button id="prevBtn" title="Previous Step">Previous</button> 
+                        <button id="pauseBtn" title="Play/Pause" data-state="Play">Pause </button> 
+                        <button id="nextBtn" title="Next Step">Next</button> 
+                    </div> 
+                </div>
+
+                <div class="animation-area">
+                    <div id="animationCanvas" class="canvas-placeholder">
+                        <div style="font-size: 1.8rem; font-weight: 300; color: var(--color-text-light);">
+                            Visualize your input or generate a random array to start.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
     </div>
-    <div class="control-buttons" id="animationControls"> 
-      <button id="prevBtn">Previous</button> 
-      <button id="pauseBtn">Pause</button> 
-      <button id="nextBtn">Next</button> 
-    </div>
-    <button id="startBtn">Start Visualization</button>
-  </div> 
-</section>
 
-  <section class="visualization-container">
-    <div class="animation-area">
-      <div id="animationCanvas"></div>
-    </div>
-
-    <div class="complexity-section">
-      <h2>Complexity Analysis</h2>
-      <div class="complexity-box">
-        <div id="algoExplanation" style="margin-top: 1rem; font-size: 0.95rem; color: #333;">
-          <p>Select an algorithm to see how it works.</p>
-       </div>
-       <p><strong>Time Complexity:</strong> <span id="timeComplexity">-</span></p>
-        <p><strong>Space Complexity:</strong> <span id="spaceComplexity">-</span></p>
-      </div>
-    </div>
-  </section>
-  
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
