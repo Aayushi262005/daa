@@ -254,8 +254,6 @@ function startAutoplay() {
 }
 
 
-// --- Algorithm Implementations (Kept the same) ---
-
 async function countingSort(arr) {
     const originalArr = [...arr];
     const maxVal = Math.max(...arr, 0);
