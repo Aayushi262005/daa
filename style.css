@@ -382,10 +382,5 @@ body {
     .control-buttons-center button {
         flex: 1 1 0%; 
     }
-}* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
 }
 
