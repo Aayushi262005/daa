@@ -17,13 +17,13 @@ const BUCKET_COUNT_INPUT = document.getElementById('bucketCountInput');
 const RADIX_DIGIT_NAMES = ['LSD (Units)', 'Tens', 'Hundreds', 'Thousands', 'Ten Thousands'];
 
 let arrayData = [];
-let animationSpeed = 400; // Default speed in ms (will be overwritten by range default)
+let animationSpeed = 400; 
 let selectedAlgorithm = null; 
 
 let animationSteps = [];
 let currentStep = 0;
 let isVisualizationActive = false; 
-let autoplayInterval = null; // null means STOPPED/PAUSED (button shows 'Play')
+let autoplayInterval = null;
 let isPausedByUser = false; // Flag to track explicit user pause during an active step sequence
 
 // --- Complexity and Explanation Data ---
@@ -117,7 +117,7 @@ function updateAlgorithmInfo(algo) {
     ALGO_EXPLANATION_DIV.innerHTML = details.explanation || '<p>Select an algorithm to see its details and complexity.</p>';
 }
 
-// 🐛 UPDATED: Ensure button text reflects autoplayInterval status ONLY when steps exist.
+
 function toggleControls() {
     
     const stepsExist = animationSteps.length > 0;
@@ -126,17 +126,14 @@ function toggleControls() {
     // 1. Play/Pause Button Text
     if (stepsExist) {
         if (isAnimationRunning) {
-            // Animation is running (autoplayInterval != null) -> Show 'Pause'
             PAUSE_BTN.textContent = 'Pause';
             PAUSE_BTN.setAttribute('data-state', 'pause');
         } else {
-            // Animation is stopped/paused (autoplayInterval == null) -> Show 'Play'
             PAUSE_BTN.textContent = 'Play'; 
             PAUSE_BTN.setAttribute('data-state', 'play');
         }
     } 
-    // If steps don't exist (on load), the button text is left as the HTML default.
-
+   
 
     // 2. Visualize/Reset Button Text & Colors
     if (isVisualizationActive) {
@@ -159,9 +156,6 @@ function toggleControls() {
     
     PREV_BTN.disabled = isAnimationRunning || !stepsExist || currentStep === 0;
     NEXT_BTN.disabled = isAnimationRunning || !stepsExist || currentStep === animationSteps.length - 1; 
-    
-    // PAUSE_BTN should be disabled only if there are NO steps to play,
-    // or if the animation is finished and not running (i.e., we are on the last step).
     PAUSE_BTN.disabled = !stepsExist || (currentStep === animationSteps.length - 1 && !isAnimationRunning); 
 }
 
@@ -207,12 +201,8 @@ function generateRandomArray(size, maxVal = 20, mode = 'int') {
 
 // 🐛 UPDATED: Ensure toggleControls is called *after* interval is set/cleared.
 function startAutoplay() {
-    // Clear any existing interval before starting a new one
     if (autoplayInterval) clearInterval(autoplayInterval);
-    
     isPausedByUser = false;
-    
-    // Set the interval (autoplayInterval is now non-null)
     autoplayInterval = setInterval(() => {
         
         // Handle Delay steps (The phase-gap)
@@ -248,12 +238,11 @@ function startAutoplay() {
         currentStep++;
         renderStep(animationSteps[currentStep]);
     }, animationSpeed);
-    
-    // CRITICAL FIX: Ensure controls update *after* the interval is set.
     toggleControls(); 
 }
 
 
+// --- Algorithm Implementations ---
 async function countingSort(arr) {
     const originalArr = [...arr];
     const maxVal = Math.max(...arr, 0);
@@ -306,8 +295,6 @@ async function countingSort(arr) {
         
         storeStep(arr, countArr, outputArr, { phase: 'place_output', output: pos, count: val }); 
     }
-
-    // Final Step: Show Original Input Array and the Sorted Output Array
     storeStep(originalArr, new Array(0), outputArr, { finalStep: true }, true);
 }
 
@@ -406,8 +393,6 @@ async function radixSort(arr) {
             storeStepSafe(workingArr, new Array(0), new Array(0), { phase: '', digitIdx: -1, initStep: 1 });
         }
     }
-
-    // Final: show original input and final sorted result
     storeStepSafe(originalArr, new Array(0), workingArr, { phase: 'final', digitIdx: -1, finalStep: true }, true);
 }
 
@@ -425,10 +410,8 @@ async function bucketSort(arr) {
     const userInput = parseInt(BUCKET_COUNT_INPUT.value);
 
     if (userInput > 0) {
-        // Use user-defined number of buckets
         bucketCount = userInput;
     } else {
-        // Use default calculation (floor(sqrt(n)))
         bucketCount = Math.floor(Math.sqrt(n)) || 1;
     }
     const buckets = Array.from({ length: bucketCount }, () => []);
@@ -448,7 +431,7 @@ async function bucketSort(arr) {
 
     // Step 0: Input Array Visible
     storeStep(arr, Array.from({ length: 0 }, () => []), new Array(0), { initStep: 1 });
-    // Step 1: Delay/Pause Step (The 1-second gap - now silent)
+    // Step 1: Delay/Pause Step
     storeStep(arr, Array.from({ length: 0 }, () => []), new Array(0), { initStep: 1, delay: true }); 
     // Step 2: Buckets Visible
     storeStep(arr, buckets, new Array(0), { initStep: 2 });
@@ -898,12 +881,10 @@ SPEED_RANGE.addEventListener('input', (e) => {
     animationSpeed = 1100 - parseInt(e.target.value); 
 
     if (autoplayInterval) {
-        // If playing, restart the autoplay interval with the new speed
         startAutoplay(); 
     }
 });
 
-// 3. Visualization Start/Reset (using VISUALIZE_BTN)
 VISUALIZE_BTN.addEventListener('click', async () => {
     if (isVisualizationActive) {
         resetVisualization();
@@ -923,11 +904,9 @@ VISUALIZE_BTN.addEventListener('click', async () => {
         return;
     }
     
-    // Prepare for visualization
     resetVisualization();
     isVisualizationActive = true;
 
-    // Run the selected algorithm to populate animationSteps
     if (selectedAlgorithm === 'counting') {
         await countingSort(arrayData);
     } else if (selectedAlgorithm === 'radix') {
@@ -935,19 +914,15 @@ VISUALIZE_BTN.addEventListener('click', async () => {
     } else if (selectedAlgorithm === 'bucket') {
         await bucketSort(arrayData);
     }
-    
-    // Start playback
     if (animationSteps.length > 0) {
         renderStep(animationSteps[0]); 
-        startAutoplay(); // Calls startAutoplay, which calls toggleControls and sets button to 'Pause'.
+        startAutoplay(); 
     }
 });
 
-// 4. Random Array Generation
+//  Random Array Generation
 RANDOM_BTN.addEventListener('click', () => {
     const mode = selectedAlgorithm ? ALGORITHM_DETAILS[selectedAlgorithm].mode : 'int';
-    
-    // Default maxVal is 20
     const randomArray = generateRandomArray(10, 20, mode); 
     
     ARRAY_INPUT.value = randomArray.join(', ');
@@ -959,15 +934,15 @@ RANDOM_BTN.addEventListener('click', () => {
     toggleControls();
 });
 
-// 5. Playback Controls
+// Playback Controls
 PAUSE_BTN.addEventListener('click', () => {
     if (PAUSE_BTN.disabled) return; 
     
-    if (autoplayInterval) { // If running (was 'Pause', so we stop it)
+    if (autoplayInterval) { 
         clearInterval(autoplayInterval);
         autoplayInterval = null;
-        isPausedByUser = true; // Set flag for manual pause
-    } else { // If stopped (was 'Play', so we start it)
+        isPausedByUser = true; 
+    } else {
         isPausedByUser = false;
         startAutoplay();
     }
@@ -993,10 +968,7 @@ PREV_BTN.addEventListener('click', () => {
         toggleControls();
     }
 });
-
-// 6. Initial Setup
 document.addEventListener('DOMContentLoaded', () => {
-    // Set initial speed based on range default value
     animationSpeed = 1100 - parseInt(SPEED_RANGE.value); 
     resetVisualization();
     toggleControls();

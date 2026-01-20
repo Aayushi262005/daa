@@ -1,4 +1,3 @@
-/* --- Global Resets and Variables --- */
 * {
     margin: 0;
     padding: 0;
@@ -7,7 +6,7 @@
 }
 
 :root {
-    /* Teal/Blue Theme (Kept Original) */
+    
     --color-primary: #02948f; /* Teal accent */
     --color-primary-dark: #005451; /* Dark Teal hover */
     --color-text-dark: #222;
@@ -27,10 +26,10 @@
 body {
     background-color: var(--color-background-light);
     color: var(--color-text-dark);
-    min-height: 100vh; /* Changed from height: 100vh for better scaling */
+    min-height: 100vh; 
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Allow scrolling if content exceeds viewport height */
+    overflow-y: auto; 
     overflow-x: hidden;
 }
 
@@ -42,11 +41,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* FIX: Corrected box-shadow color for teal theme */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); 
     height: 60px;
     flex-shrink: 0;
-    z-index: 100; /* Ensure header is on top */
+    z-index: 100; 
 }
 
 .header-logo {
@@ -71,11 +69,9 @@ body {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    /* FIX: Allow controls to wrap on smaller screens */
     flex-wrap: wrap; 
 }
 
-/* Compact Control Styling for Header */
 .algo-select-compact, .speed-control-compact {
     display: flex;
     align-items: center;
@@ -86,6 +82,9 @@ body {
 .control-label {
     font-weight: 500;
     color: white;
+}
+#BU{
+    color: rgb(109, 108, 108);
 }
 
 .algo-buttons {
@@ -114,7 +113,6 @@ body {
     color: white;
 }
 
-/* Speed Range Slider Styling (Kept Original) */
 #speedRange {
     -webkit-appearance: none;
     appearance: none;
@@ -141,7 +139,6 @@ body {
     border-radius: 4px;
 }
 
-/* Button Styling (Teal theme) */
 .primary-btn {
     background-color: transparent;
     color: white;
@@ -175,36 +172,33 @@ body {
     background-color: #e0e0e0;
 }
 
-/* --- 2. MAIN APP LAYOUT (Sidebar + Main Content) --- */
 .app-container {
     display: flex;
     flex: 1;
-    /* FIX: Removed overflow: hidden; to allow inner scrolling */
-    max-width: 1600px; /* Optional: set a max width for large screens */
+    max-width: 1600px; 
     width: 100%;
     margin: 0 auto;
 }
 
-/* LEFT SIDEBAR (Complexity/Analysis) */
 .left-sidebar {
     width: 300px;
-    min-width: 280px; /* FIX: Set min-width for stability */
+    min-width: 280px; 
     background-color: var(--color-sidebar);
     padding: 1rem;
     border-right: 1px solid var(--color-border);
     overflow-y: auto;
     flex-shrink: 0;
-    position: sticky; /* Optional: Keep sidebar in place */
+    position: sticky;
     top: 0; 
-    height: calc(100vh - 60px); /* Fill remaining viewport height */
+    height: calc(100vh - 60px);
 }
 
 .sidebar-heading {
-    font-size: 1.2rem; /* FIX: Slightly increased font size */
+    font-size: 1.2rem; 
     color: var(--color-primary-dark);
     padding: 0.5rem 0;
     margin-bottom: 1rem;
-    font-weight: 600; /* FIX: Made heading bolder */
+    font-weight: 600;
 }
 
 .complexity-box {
@@ -212,26 +206,24 @@ body {
     background-color: var(--color-background-light);
     border-radius: 10px;
     margin-bottom: 1rem;
-    font-size: 0.95rem; /* FIX: Slightly increased font size */
-    line-height: 1.5; /* FIX: Increased line height for readability */
+    font-size: 0.95rem; 
+    line-height: 1.5; 
 }
 
 .complexity-box strong {
-    font-weight: 600; /* FIX: Made labels bolder */
-}
+    font-weight: 600; }
 
 .explanation-text {
     color: var(--color-text-light);
     margin-bottom: 0.75rem;
 }
 
-/* --- 3. MAIN CONTENT (Animation Area and Integrated Controls) --- */
 .main-content {
     flex: 1;
-    min-width: 600px; /* Ensure a minimum width for the main area */
+    min-width: 600px;
     background-color: var(--color-main-bg);
     padding: 1.5rem;
-    overflow-y: auto; /* Allow scrolling within the main content */
+    overflow-y: auto;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -241,16 +233,13 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 1200px; /* FIX: Increased max-width for visualization space */
+    max-width: 1200px; 
     height: 100%;
     min-height: 100%;
 }
 
-
-/* Compact Controls Area placed just above the canvas */
 .central-controls-area {
     display: flex;
-    /* FIX: Allow controls to stack/wrap for smaller viewports */
     flex-wrap: wrap; 
     justify-content: space-between;
     align-items: center;
@@ -261,7 +250,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     background-color: #fff;
     margin-bottom: 1rem;
-    gap: 1rem; /* Added gap for spacing when wrapping */
+    gap: 1rem; 
 }
 
 .input-array-center {
@@ -269,11 +258,11 @@ body {
     flex-grow: 1;
     gap: 0.5rem;
     align-items: center;
-    min-width: 50%; /* FIX: Ensure input section takes sufficient width */
+    min-width: 50%; 
 }
 
 .array-label-compact {
-    font-size: 0.95rem; /* FIX: Slightly larger font */
+    font-size: 0.95rem;
     color: var(--color-text-light);
     font-weight: 500;
     white-space: nowrap;
@@ -284,21 +273,18 @@ body {
     padding: 0.5rem 0.75rem;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 1rem; /* FIX: Larger font size for input */
-    min-width: 200px; /* FIX: Ensure a minimum width */
-}
+    font-size: 1rem; 
+    min-width: 200px; }
 
-/* Central Animation Controls (aligned to the right) */
 .control-buttons-center {
     display: flex;
-    gap: 0.75rem; /* FIX: Increased gap between control buttons */
-    /* FIX: Set a minimum width for the button group */
+    gap: 0.75rem;
     min-width: 220px; 
 }
 
 .control-buttons-center button {
-    padding: 0.6rem 1.1rem; /* FIX: Slightly larger buttons */
-    font-size: 0.95rem; /* FIX: Slightly larger font */
+    padding: 0.6rem 1.1rem; 
+    font-size: 0.95rem; 
     background-color: var(--color-primary);
     color: white;
     border: none;
@@ -315,7 +301,7 @@ body {
 .animation-area {
     flex-grow: 1;
     width: 100%;
-    min-height: 350px; /* Ensure minimum space for visualization */
+    min-height: 350px;
 }
 
 #animationCanvas {
@@ -326,14 +312,13 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     display: flex;
-    flex-direction: column; /* FIX: Changed to column for array rendering */
-    justify-content: flex-start; /* Start content from the top */
+    flex-direction: column; 
+    justify-content: flex-start;
     align-items: center;
     font-size: 1.8rem;
     font-weight: 300;
     color: var(--color-text-light);
-    padding: 1.5rem; /* Added internal padding */
-    /* FIX: Crucial for array visibility if elements are too many */
+    padding: 1.5rem; 
     overflow-x: auto; 
     overflow-y: auto; 
 }
@@ -395,7 +380,6 @@ body {
     }
     
     .control-buttons-center button {
-        /* Distribute the Play/Prev/Next buttons evenly */
         flex: 1 1 0%; 
     }
 }* {
