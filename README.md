@@ -4,7 +4,7 @@ An interactive web-based application that visually demonstrates the execution of
 
 This project focuses on how **linear-time sorting** is achieved by leveraging **data distribution and auxiliary memory**, rather than comparisons.
 
-Live Demo ** https://aayushi262005.github.io/Visualization_Project/**
+Live Demo **https://aayushi262005.github.io/Visualization_Project/**
 
 ## Project Purpose
 
