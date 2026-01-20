@@ -16,7 +16,7 @@ This visualizer was built to make algorithm execution **observable, inspectable,
 - Auxiliary data structures
 - Step-by-step progression of the algorithm
 
-## 🚀 Features
+## Features
 
 - Step-by-step animation of sorting process
 -  Playback controls:
